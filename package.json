@@ -1,0 +1,70 @@
+{
+  "name": "icontheme-studio",
+  "version": "1.0.0",
+  "description": "A theme-ready icon studio with preview, binding and offline export.",
+  "author": "Kenny <wowohoo@qq.com>",
+  "main": "./lib/index.js",
+  "module": "./esm/index.js",
+  "types": "./esm/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiemin2161/IconTheme-Studio.git"
+  },
+  "homepage": "https://github.com/xiemin2161/IconTheme-Studio",
+  "scripts": {
+    "clean": "node -e \"const fs=require('fs');const path=require('path');const dir='fonts';if(fs.existsSync(dir)){fs.readdirSync(dir).forEach(f=>{const p=path.join(dir,f);if(fs.statSync(p).isFile()&&/\\.(css|js|json|eot|svg|ttf|woff|woff2|less|scss|styl|html)$/.test(f)&&!['common.css','common.js','common.scss','download.js','help-content.js','help-content.json','app.js','index.html','symbol.html','unicode.html','icon-tags.json'].includes(f)){fs.unlinkSync(p);console.log('Deleted:',f)}});fs.readdirSync(path.join(dir,'react')).forEach(f=>{fs.unlinkSync(path.join(dir,'react',f));console.log('Deleted: react/'+f)});fs.readdirSync(path.join(dir,'vue')).forEach(f=>{fs.unlinkSync(path.join(dir,'vue',f));console.log('Deleted: vue/'+f)})}\"",
+    "create-js-files": "node scripts/create-js-files.js",
+    "vendor:jszip": "node -e \"const fs=require('fs');const path=require('path');const src=require.resolve('jszip/dist/jszip.min.js');const dest=path.join(process.cwd(),'fonts','vendor','jszip.min.js');fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(src,dest);console.log('Copied:',src,'->',dest);\"",
+    "patch:jszip": "node scripts/patch-jszip.js",
+    "font": "npx svgtofont --sources icon --output fonts --fontName its-icon --website ./fonts && node -e \"const fs=require('fs');['fonts/its-icon.css.map','fonts/common.css.map'].forEach(f=>{try{fs.unlinkSync(f);console.log('Deleted:',f)}catch(e){}})\"",
+    "scss": "sass fonts/common.scss fonts/common.css --style compressed --no-source-map",
+    "copy": "cpy fonts/react/*.js fonts/react/*.d.ts react --flat",
+    "build": "tsbb build react/*.{js,d.ts} --useBabel",
+    "process-tags": "node scripts/process-tagged-icons.js",
+    "restore-filenames": "node scripts/process-tagged-icons.js restore",
+    "build-with-tags": "node scripts/build-with-tags.js",
+    "start": "npm run build-with-tags"
+  },
+  "files": [
+    "lib",
+    "esm",
+    "*.js",
+    "*.d.ts",
+    "icon",
+    "!icon/react",
+    "!icon/*.html",
+    "fonts"
+  ],
+  "keywords": [
+    "svg",
+    "icon",
+    "react",
+    "font",
+    "webfont",
+    "icon",
+    "iconfont",
+    "font-face",
+    "compress",
+    "minify",
+    "font-cli",
+    "otf",
+    "ttf",
+    "woff",
+    "eot",
+    "svg",
+    "ttf2eot",
+    "ttf2woff",
+    "ttf2svg",
+    "svg2ttf",
+    "css",
+    "base64"
+  ],
+  "devDependencies": {
+    "cpy-cli": "^5.0.0",
+    "jszip": "^3.10.1",
+    "sass": "^1.97.3",
+    "svgtofont": "^6.5.1",
+    "tsbb": "^3.7.9"
+  },
+  "license": "MIT"
+}

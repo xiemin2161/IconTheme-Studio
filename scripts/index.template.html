@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IconTheme Studio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="stylesheet" href="its-icon.css" />
+  <link rel="stylesheet" href="common.css" />
+  <style>
+    #color-bind-modal .modal-content { max-width: 760px; }
+    .color-bind-body { padding: 16px 20px 20px 20px; }
+    .color-bind-desc { margin: 0 0 12px 0; color: #666; font-size: 12px; line-height: 1.5; }
+    .bind-targets { display: flex; gap: 8px; margin-bottom: 12px; }
+    .bind-target-btn { border: 1px solid #d9d9d9; background: #fff; color: #666; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+    .bind-target-btn.active { border-color: #3c75e4; color: #3c75e4; background: rgba(60,117,228,0.06); }
+    .color-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; max-height: 220px; overflow-y: auto; }
+    .color-chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #e4e4e4; border-radius: 999px; padding: 5px 10px; background: #fff; cursor: pointer; font-size: 12px; color: #444; transition: none; }
+    .color-chip:hover { border-color: #3c75e4; }
+    .color-chip.active { border-color: #3c75e4; box-shadow: 0 0 0 2px rgba(60,117,228,0.1); }
+    .color-chip.disabled { border-color: #ececec; color: #bbb; background: #f7f7f7; cursor: not-allowed; }
+    .color-chip.disabled .color-dot { opacity: 0.35; }
+    .color-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0; transition: none; }
+    .bind-summary { border: 1px solid #eee; border-radius: 8px; padding: 10px; background: #fafafa; margin-bottom: 12px; font-size: 12px; color: #555; }
+    .bind-summary-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+    .bind-value { display: inline-flex; align-items: center; gap: 6px; color: #333; }
+    .bind-actions { display: flex; gap: 8px; }
+    .bind-actions button { border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+    .bind-actions #apply-color-binding-btn { border-color: #3c75e4; color: #fff; background: #3c75e4; }
+    #theme-preview-modal { display: none; position: fixed; top: 0; left: 0; width: auto; height: auto; background: transparent; z-index: 1200; }
+    #theme-preview-modal.show { display: block; }
+    #theme-preview-modal .modal-content { display: inline-block; width: auto; min-width: 0; max-width: calc(100vw - 24px); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18); }
+    .theme-preview-body { padding: 16px 20px 20px 20px; }
+    .theme-row { margin-bottom: 14px; }
+    .theme-row-title { font-size: 12px; color: #555; margin-bottom: 8px; }
+    .theme-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+    .theme-color-chip { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; box-sizing: border-box; }
+    .theme-color-chip.is-light { border-color: #cfd8dc; }
+    .theme-color-chip.active { border-color: #3c75e4; box-shadow: 0 0 0 2px rgba(60,117,228,0.12); }
+    .theme-preview-tip { margin: 0; font-size: 12px; color: #777; line-height: 1.5; }
+  </style>
+  <script>
+    (function () {
+      var key = 'iconthemestudio:tab';
+      var valid = { fontclass: 1, symbol: 1, unicode: 1 };
+      var tab = null;
+      try { tab = window.localStorage && window.localStorage.getItem(key); } catch (e) {}
+      try {
+        var t = tab && valid[tab] ? tab : 'fontclass';
+        document.documentElement.setAttribute('data-its-tab', t);
+      } catch (e2) {}
+    })();
+  </script>
+  <!-- __OFFLINE_INLINE_DATA__ -->
+  <script src="vendor/jszip.min.js"></script>
+  <script src="common.js"></script>
+  <script src="help-content.js"></script>
+  <script src="app.js"></script>
+  <script src="download.js"></script>
+</head>
+
+<body>
+  <div class="header">
+    <h1>IconTheme Studio<sup>1.0.0</sup></h1>
+    <div class="nav-tabs">
+      <a href="#fontclass" class="active" data-tab="fontclass">FontClass</a>
+      <a href="#symbol" data-tab="symbol">Symbol</a>
+      <a href="#unicode" data-tab="unicode">Unicode</a>
+      <div class="icon-count" id="icon-count"></div>
+    </div>
+    <div class="header-icons">
+      <div class="search" id="search-box">
+        <input id="search-input" type="search" placeholder="搜索图标名称/标签…" autocomplete="off" />
+        <a id="search-clear" title="清空搜索" aria-label="Clear search">
+          <svg viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm3.146 4.854a.5.5 0 0 0-.707 0L8 7.293 5.561 4.854a.5.5 0 1 0-.707.707L7.293 8l-2.439 2.439a.5.5 0 0 0 .707.707L8 8.707l2.439 2.439a.5.5 0 0 0 .707-.707L8.707 8l2.439-2.439a.5.5 0 0 0 0-.707z"/>
+          </svg>
+        </a>
+        <a id="search-btn" title="搜索 (Ctrl+K)" aria-label="Search">
+          <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1000.3 1000.3c-31.6 31.6-82.7 31.6-114.3 0L703.3 817.5c-18.9-18.9-18.9-49.6 0-68.6l45.7-45.7c18.9-18.9 49.6-18.9 68.5 0L1000.3 886c31.6 31.6 31.6 82.8 0 114.3z"></path>
+            <path d="M448.8 0.6C200.9 0.6 0 201.7 0 449.7s200.9 449.1 448.8 449.1 448.8-201.1 448.8-449.1S696.7 0.6 448.8 0.6zM275.6 305.3l0.3-0.1c-0.2 0.1-20.4 12.8-37.5 41.1-23 38.1-30.2 85.7-21.3 141.3 2.6 16.4-8.5 31.7-24.9 34.4-1.6 0.3-3.2 0.4-4.8 0.4-14.5 0-27.2-10.5-29.6-25.3-14.3-89.5 9.3-150.2 31.5-185.4 24.5-38.8 52.8-56.2 55.9-58l0.1 0.1c4.6-2.9 10-4.6 15.9-4.6 16.5 0 29.9 13.4 29.9 29.9 0 11.3-6.3 21.1-15.5 26.2z"></path>
+          </svg>
+        </a>
+      </div>
+      <a href="https://github.com/xiemin2161/IconTheme-Studio" target="_blank" title="GitHub">
+        <svg viewBox="0 0 16 16">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+      <a id="download-btn" title="下载图标包">
+        <svg viewBox="0 0 16 16">
+          <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" transform="rotate(90 8 8)"/>
+        </svg>
+      </a>
+      <a id="color-bind-btn" class="color-bind-btn" title="颜色绑定">
+        <svg viewBox="158 160 708 708" aria-hidden="true">
+          <path d="M511.999488 160.148283c-196.335424 0-353.444491 157.099857-353.444491 353.440398 0 196.339517 157.108044 353.439375 353.444491 353.439375 31.467657 0 58.906562-27.554538 58.906562-58.907586 0-15.762993-3.909026-27.554538-15.64429-39.285709-7.945965-11.794615-15.764016-23.590254-15.764016-39.234544 0-31.467657 27.49928-58.906562 58.907586-58.906562l70.694015 0c109.995073 0 196.342587-86.406866 196.342587-196.394776C865.442956 301.490264 708.393241 160.148283 511.999488 160.148283M296.043211 513.588681c-31.460494 0-58.900423-27.554538-58.900423-58.906562 0-31.408306 27.438905-58.903493 58.900423-58.903493 31.416492 0 58.906562 27.495187 58.906562 58.903493C354.950796 486.034143 327.460726 513.588681 296.043211 513.588681M413.857359 356.483708c-31.467657 0-58.906562-27.49928-58.906562-58.907586 0-31.407282 27.438905-58.906562 58.906562-58.906562 31.408306 0 58.907586 27.49928 58.907586 58.906562C472.765968 328.984428 445.266688 356.483708 413.857359 356.483708M610.199946 356.483708c-31.416492 0-58.906562-27.49928-58.906562-58.907586 0-31.407282 27.49007-58.906562 58.906562-58.906562 31.408306 0 58.900423 27.49928 58.900423 58.906562C669.100369 328.984428 641.609275 356.483708 610.199946 356.483708M728.006931 513.588681c-31.407282 0-58.906562-27.554538-58.906562-58.906562 0-31.408306 27.49928-58.903493 58.906562-58.903493 31.416492 0 58.906562 27.495187 58.906562 58.903493C786.914517 486.034143 759.423423 513.588681 728.006931 513.588681"></path>
+        </svg>
+      </a>
+      <a id="theme-preview-btn" title="主题切换">
+        <svg viewBox="0 0 1024 1024" aria-hidden="true">
+          <path d="M511.966509 0.066982c96.036384 0 185.886507 26.451603 262.724147 72.443261L767.949763 68.670494l-127.948963 221.638835A254.788666 254.788666 0 0 0 511.966509 256.050237V0.066982z" fill="#E70212"></path><path d="M767.949763 68.670494a509.577332 509.577332 0 0 1 191.304819 194.120635L955.329506 256.050237l-221.638835 127.991627a257.263171 257.263171 0 0 0-93.689871-93.689871L767.949763 68.670494z" fill="#EA6101"></path><path d="M955.329506 256.050237A509.577332 509.577332 0 0 1 1023.933018 519.798317V512.033491h-255.983255a254.788666 254.788666 0 0 0-34.259092-127.991627l221.638835-127.991627z" fill="#F39801"></path><path d="M1023.933018 512.033491c0 90.020778-23.251812 174.665907-64.038478 248.175765l-4.565034 7.80749-221.638835-127.948964c21.758577-37.672202 34.259092-81.402675 34.259092-128.034291v-0.042664L1023.933018 512.033491z" fill="#FCC902"></path><path d="M733.690671 640.025118l221.638835 127.991628a509.66266 509.66266 0 0 1-179.52959 182.900035l-7.850153 4.479707-127.991627-221.638835A257.263171 257.263171 0 0 0 733.690671 640.025118z" fill="#FEF200"></path><path d="M640.0008 733.757653L767.949763 955.396488A509.66266 509.66266 0 0 1 521.011251 1024H511.966509v-255.983254a254.788666 254.788666 0 0 0 128.034291-34.259093z" fill="#90C320"></path><path d="M511.966509 768.016746v255.983254c-90.020778 0-174.665907-23.251812-248.175765-64.038477L255.983254 955.396488l127.991628-221.638835c37.672202 21.758577 81.402675 34.259092 128.034291 34.259093z" fill="#019A44"></path><path d="M383.974882 733.757653l-127.991628 221.638835a509.66266 509.66266 0 0 1-182.900035-179.529589L68.603512 768.016746l221.638835-127.991628A257.263171 257.263171 0 0 0 383.974882 733.757653z" fill="#019E97"></path><path d="M255.983254 512.033491c0 46.631616 12.457852 90.362089 34.259093 128.034291L68.603512 768.016746A509.66266 509.66266 0 0 1 0 521.078233V512.033491h255.983254z" fill="#0169B8"></path><path d="M68.603512 256.050237l221.638835 127.991627A254.788666 254.788666 0 0 0 255.983254 512.033491H0c0-90.020778 23.251812-174.665907 64.038477-248.175765L68.603512 256.050237z" fill="#1C2089"></path><path d="M262.681483 64.745418L255.983254 68.670494l127.991628 221.638835A257.263171 257.263171 0 0 0 290.242347 384.041864L68.603512 256.050237a509.577332 509.577332 0 0 1 194.120635-191.304819z" fill="#621988"></path><path d="M519.731334 0.066982H511.966509v255.983255a254.788666 254.788666 0 0 0-128.034291 34.259092L255.983254 68.670494A509.577332 509.577332 0 0 1 519.731334 0.066982z" fill="#910783"></path>
+        </svg>
+      </a>
+      <a id="help-btn" title="使用帮助">
+        <svg viewBox="0 0 16 16">
+          <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+  
+  <div class="icons">
+    <ul id="icons-list-fontclass" class="tab-content active"></ul>
+    <ul id="icons-list-symbol" class="tab-content"></ul>
+    <ul id="icons-list-unicode" class="tab-content"></ul>
+  </div>
+  
+  <div id="help-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>使用方法</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="help-tabs">
+          <button class="help-tab-btn active" data-framework="html">HTML</button>
+          <button class="help-tab-btn" data-framework="react">React</button>
+          <button class="help-tab-btn" data-framework="vue">Vue</button>
+          <button class="help-tab-btn" data-framework="angular">Angular</button>
+        </div>
+        <div class="help-content-scroll">
+          <div id="help-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="color-bind-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>颜色绑定</h2>
+        <button class="modal-close" id="color-bind-close">&times;</button>
+      </div>
+      <div class="color-bind-body">
+        <p class="color-bind-desc">从图标颜色池中选色，并分别绑定到两个通用变量：<code>--its-icon-primary</code>（主色）和 <code>--its-icon-secondary</code>（辅色）。</p>
+        <div class="bind-summary" style="margin-top:-4px;">
+          <div style="font-size:12px;color:#555;line-height:1.6;">
+            <div><strong>使用说明</strong></div>
+            <div>1. 先选择“主色变量”或“辅色变量”。</div>
+            <div>2. 从下方颜色池选择颜色，再点击“绑定”。</div>
+            <div>3. 点击“绑定”会立即生效并持久化；“重置绑定”会清空当前绑定。</div>
+            <div>4. 在你的项目里覆盖这两个变量即可统一换肤：</div>
+            <pre style="margin-top:6px;"><code>:root {
+  --its-icon-primary: #ACEE2A;
+  --its-icon-secondary: #FFFFFF;
+}</code></pre>
+          </div>
+        </div>
+        <div class="bind-targets">
+          <button class="bind-target-btn active" data-bind-target="primary">主色变量</button>
+          <button class="bind-target-btn" data-bind-target="secondary">辅色变量</button>
+        </div>
+        <div id="icon-color-pool" class="color-pool"></div>
+        <div class="bind-summary">
+          <div class="bind-summary-row">
+            <span>主色变量 `--its-icon-primary`</span>
+            <span class="bind-value" id="bind-primary-value"></span>
+          </div>
+          <div class="bind-summary-row">
+            <span>辅色变量 `--its-icon-secondary`</span>
+            <span class="bind-value" id="bind-secondary-value"></span>
+          </div>
+        </div>
+        <div class="bind-actions">
+          <button id="apply-color-binding-btn">绑定</button>
+          <button id="reset-color-binding-btn">重置绑定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="theme-preview-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>主题切换</h2>
+        <button class="modal-close" id="theme-preview-close">&times;</button>
+      </div>
+      <div class="theme-preview-body">
+        <div class="theme-row">
+          <div class="theme-row-title">主题色（绑定到 `--its-icon-primary`）</div>
+          <div id="theme-primary-colors" class="theme-colors"></div>
+        </div>
+        <div class="theme-row">
+          <div class="theme-row-title">辅助色（绑定到 `--its-icon-secondary`）</div>
+          <div id="theme-secondary-colors" class="theme-colors"></div>
+        </div>
+        <p class="theme-preview-tip">点击颜色后会立即更新页面图标颜色，用于实时查看主题切换效果。</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
