@@ -504,7 +504,7 @@ function renderFontClassIcons(groupedIcons) {
       li.className = 'icon-item';
       var chineseTags = getIconTags(iconName);
       
-      li.innerHTML = '<i class="its-icon-' + iconName + '"></i><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags);
+      li.innerHTML = '<i class="its-icon-' + iconName + ' icon-glyph"></i><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags);
       li.onclick = function() {
         copyToClipboard('<i class="its-icon-' + iconName + '"></i>', iconName);
       };
@@ -532,7 +532,7 @@ function renderSymbolIcons(groupedIcons) {
       li.className = 'icon-item';
       var chineseTags = getIconTags(iconName);
       
-      li.innerHTML = '<svg><use xlink:href="#its-icon-' + iconName + '"></use></svg><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags);
+      li.innerHTML = '<svg class="icon-glyph"><use xlink:href="#its-icon-' + iconName + '"></use></svg><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags);
       li.onclick = function() {
         copyToClipboard('<svg><use xlink:href="#its-icon-' + iconName + '"></use></svg>', iconName);
       };
@@ -561,7 +561,7 @@ function renderUnicodeIcons(groupedIcons, unicodeMap) {
       li.className = 'icon-item';
       var chineseTags = getIconTags(iconName);
       
-      li.innerHTML = '<i class="its-icon-' + iconName + '"></i><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags) + '<span class="unicode">&amp;#x' + unicode + ';</span>';
+      li.innerHTML = '<i class="its-icon-' + iconName + ' icon-glyph"></i><h4>' + iconName + '</h4>' + renderChineseTags(chineseTags) + '<span class="unicode">&amp;#x' + unicode + ';</span>';
       li.onclick = function() {
         copyToClipboard('<i class="its-icon">&#x' + unicode + ';</i>', iconName);
       };

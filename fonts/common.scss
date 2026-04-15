@@ -292,6 +292,12 @@ a {
       transition: all 0.3s ease;
       border: 1px solid $border-color;
       cursor: pointer;
+      // Keep card internals aligned across FontClass/Symbol/Unicode tabs.
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 4px;
 
       &:hover {
         background: linear-gradient(135deg, $bg-white 0%, #f0f0f0 100%);
@@ -306,19 +312,27 @@ a {
         }
       }
 
+      .icon-glyph {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        flex-shrink: 0;
+        margin: 0;
+      }
+
       [class^="its-icon-"] {
         font-size: 32px;
         color: $text-color;
         transition: color 0.3s;
-        display: block;
-        margin-bottom: 4px;
+        display: inline-flex;
       }
 
       svg {
-        width: 32px;
-        height: 32px;
-        display: block;
-        margin: 0 auto 4px auto;
+        display: inline-block;
+        vertical-align: top;
       }
 
       h4 {
@@ -328,7 +342,8 @@ a {
         font-size: 10px;
         line-height: 1.2;
         word-break: break-all;
-        margin: 0 0 4px 0;
+        margin: 0;
+        min-height: 12px;
       }
 
       .chinese-tags {
@@ -375,7 +390,7 @@ a {
         color: $text-lighter;
         font-size: 9px;
         display: block;
-        margin-top: 3px;
+        margin-top: 0;
         font-family: 'Courier New', monospace;
       }
     }
