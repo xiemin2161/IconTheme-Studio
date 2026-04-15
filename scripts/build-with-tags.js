@@ -49,6 +49,20 @@ try {
     fs.copyFileSync(templatePath, indexPath);
     console.log('   ✅ index.html 已从模板恢复');
   }
+
+  // Step 4.2: Copy branding assets into fonts/assets for preview hosting. / 步骤4.2：复制品牌资源到 fonts/assets，便于预览站托管。
+  console.log('\n   📁 同步预览资源 assets...');
+  var assetsSrcDir = path.join(__dirname, '../assets');
+  var assetsDestDir = path.join(__dirname, '../fonts/assets');
+  fs.mkdirSync(assetsDestDir, { recursive: true });
+  ['logo.svg', 'favicon.svg'].forEach(function(file) {
+    var src = path.join(assetsSrcDir, file);
+    var dest = path.join(assetsDestDir, file);
+    if (fs.existsSync(src)) {
+      fs.copyFileSync(src, dest);
+      console.log('   ✅ 已同步: assets/' + file);
+    }
+  });
   
   // Step 5: Patch generated HTML for local JSZip reference and malformed tags. / 步骤5：修补生成 HTML（本地 JSZip 引用与异常标签）。
   console.log('\n5️⃣ 应用补丁...');

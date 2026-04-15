@@ -310,8 +310,8 @@
           var cssPromise = fetch('its-icon.css').then(function(r) { return r.text(); });
           var svgPromise = fetch('its-icon.symbol.svg').then(function(r) { return r.text(); });
           var tagsPromise = fetch('icon-tags.json').then(function(r) { return r.json(); }).catch(function() { return {}; });
-          var logoPromise = fetch('../assets/logo.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
-          var faviconPromise = fetch('../assets/favicon.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
+          var logoPromise = fetch('assets/logo.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
+          var faviconPromise = fetch('assets/favicon.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
 
           Promise.all([Promise.all(promises), cssPromise, svgPromise, tagsPromise, logoPromise, faviconPromise]).then(function(results) {
             var fileContents = results[0];
