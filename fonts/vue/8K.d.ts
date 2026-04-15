@@ -1,3 +1,3 @@
 import type { DefineComponent } from 'vue';
-declare const itsIcon8K: DefineComponent<Record<string, any>>;
-export { itsIcon8K };
+declare const ItsIcon8K: DefineComponent<Record<string, any>>;
+export { ItsIcon8K };

@@ -1,4 +1,4 @@
-# IconTheme Studio v1.0.0
+# IconTheme Studio v1.0.1
 
 `IconTheme Studio` 是一个从「图标生产」到「项目接入」的完整工具。  
 你可以在本地维护 SVG 源文件，一键构建预览站，完成颜色变量绑定后导出离线包，再接入业务项目。
@@ -35,7 +35,7 @@
 
 ```bash
 npm install
-npm run start
+npm run build
 ```
 
 构建完成后主要产物在 `fonts/`：
@@ -156,7 +156,7 @@ fetch('/assets/icons/its-icon.symbol.svg')
 
 ## 常用命令
 
-- `npm run start`：完整构建（推荐日常使用）。
+- `npm run build`：完整构建（推荐日常使用，包含标签处理与恢复）。
 - `npm run font`：仅重新生成字体及相关资源。
 - `npm run create-js-files`：仅更新预览站脚本文件。
 

@@ -4,15 +4,14 @@
   <meta charset="UTF-8">
   <title>IconTheme Studio</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
   <link rel="stylesheet" href="its-icon.css" />
   <link rel="stylesheet" href="common.css" />
   <style>
     #color-bind-modal .modal-content { max-width: 760px; }
     .color-bind-body { padding: 16px 20px 20px 20px; }
     .color-bind-desc { margin: 0 0 12px 0; color: #666; font-size: 12px; line-height: 1.5; }
-    .bind-targets { display: flex; gap: 8px; margin-bottom: 12px; }
-    .bind-target-btn { border: 1px solid #d9d9d9; background: #fff; color: #666; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-    .bind-target-btn.active { border-color: #3c75e4; color: #3c75e4; background: rgba(60,117,228,0.06); }
+    .bind-summary-label { color: #666; font-size: 12px; min-width: 170px; }
     .color-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; max-height: 220px; overflow-y: auto; }
     .color-chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #e4e4e4; border-radius: 999px; padding: 5px 10px; background: #fff; cursor: pointer; font-size: 12px; color: #444; transition: none; }
     .color-chip:hover { border-color: #3c75e4; }
@@ -23,6 +22,9 @@
     .bind-summary { border: 1px solid #eee; border-radius: 8px; padding: 10px; background: #fafafa; margin-bottom: 12px; font-size: 12px; color: #555; }
     .bind-summary-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
     .bind-value { display: inline-flex; align-items: center; gap: 6px; color: #333; }
+    .bind-color-group { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .bind-color-title { width: 72px; flex-shrink: 0; font-size: 14px; font-weight: 600; color: #555; margin: 0; line-height: 1; }
+    .bind-color-group .color-pool { flex: 1; margin-bottom: 0; }
     .bind-actions { display: flex; gap: 8px; }
     .bind-actions button { border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; padding: 6px 10px; font-size: 12px; cursor: pointer; }
     .bind-actions #apply-color-binding-btn { border-color: #3c75e4; color: #fff; background: #3c75e4; }
@@ -60,7 +62,7 @@
 
 <body>
   <div class="header">
-    <h1>IconTheme Studio<sup>1.0.0</sup></h1>
+    <h1><img class="brand-logo" src="../assets/logo.svg" alt="IconTheme Studio logo" />IconTheme Studio<sup>1.0.1</sup></h1>
     <div class="nav-tabs">
       <a href="#fontclass" class="active" data-tab="fontclass">FontClass</a>
       <a href="#symbol" data-tab="symbol">Symbol</a>
@@ -147,28 +149,32 @@
         <div class="bind-summary" style="margin-top:-4px;">
           <div style="font-size:12px;color:#555;line-height:1.6;">
             <div><strong>使用说明</strong></div>
-            <div>1. 先选择“主色变量”或“辅色变量”。</div>
-            <div>2. 从下方颜色池选择颜色，再点击“绑定”。</div>
-            <div>3. 点击“绑定”会立即生效并持久化；“重置绑定”会清空当前绑定。</div>
-            <div>4. 在你的项目里覆盖这两个变量即可统一换肤：</div>
+            <div>1. 在“主色变量”一行选择主色，在“辅色变量”一行选择辅色。</div>
+            <div>2. 两行颜色联动：一行选中的颜色，在另一行会自动禁用。</div>
+            <div>3. 选择完成后点击“绑定”，会立即生效并持久化。</div>
+            <div>4. 点击“重置绑定”会清空当前绑定。</div>
+            <div>5. 在你的项目里覆盖这两个变量即可统一换肤：</div>
             <pre style="margin-top:6px;"><code>:root {
   --its-icon-primary: #ACEE2A;
   --its-icon-secondary: #FFFFFF;
 }</code></pre>
           </div>
         </div>
-        <div class="bind-targets">
-          <button class="bind-target-btn active" data-bind-target="primary">主色变量</button>
-          <button class="bind-target-btn" data-bind-target="secondary">辅色变量</button>
+        <div class="bind-color-group">
+          <div class="bind-color-title">主色变量</div>
+          <div id="icon-color-pool-primary" class="color-pool"></div>
         </div>
-        <div id="icon-color-pool" class="color-pool"></div>
+        <div class="bind-color-group">
+          <div class="bind-color-title">辅色变量</div>
+          <div id="icon-color-pool-secondary" class="color-pool"></div>
+        </div>
         <div class="bind-summary">
           <div class="bind-summary-row">
-            <span>主色变量 `--its-icon-primary`</span>
+            <span class="bind-summary-label">主色变量 `--its-icon-primary`</span>
             <span class="bind-value" id="bind-primary-value"></span>
           </div>
           <div class="bind-summary-row">
-            <span>辅色变量 `--its-icon-secondary`</span>
+            <span class="bind-summary-label">辅色变量 `--its-icon-secondary`</span>
             <span class="bind-value" id="bind-secondary-value"></span>
           </div>
         </div>

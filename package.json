@@ -1,6 +1,6 @@
 {
   "name": "icontheme-studio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A theme-ready icon studio with preview, binding and offline export.",
   "author": "Kenny <wowohoo@qq.com>",
   "main": "./lib/index.js",
@@ -19,11 +19,10 @@
     "font": "npx svgtofont --sources icon --output fonts --fontName its-icon --website ./fonts && node -e \"const fs=require('fs');['fonts/its-icon.css.map','fonts/common.css.map'].forEach(f=>{try{fs.unlinkSync(f);console.log('Deleted:',f)}catch(e){}})\"",
     "scss": "sass fonts/common.scss fonts/common.css --style compressed --no-source-map",
     "copy": "cpy fonts/react/*.js fonts/react/*.d.ts react --flat",
-    "build": "tsbb build react/*.{js,d.ts} --useBabel",
+    "build:react": "tsbb build react/*.{js,d.ts} --useBabel",
     "process-tags": "node scripts/process-tagged-icons.js",
     "restore-filenames": "node scripts/process-tagged-icons.js restore",
-    "build-with-tags": "node scripts/build-with-tags.js",
-    "start": "npm run build-with-tags"
+    "build": "node scripts/build-with-tags.js"
   },
   "files": [
     "lib",

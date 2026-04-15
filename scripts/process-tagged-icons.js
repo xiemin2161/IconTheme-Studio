@@ -1,21 +1,30 @@
+/**
+ * Tagged icon filename processor / 带标签图标文件名处理器。
+ *
+ * Modes / 模式:
+ * - default: extract tags from `icon/` filenames and write metadata files
+ *   默认：从 `icon/` 文件名提取标签并写入元数据文件
+ * - restore: restore original tagged filenames after build
+ *   恢复：构建后恢复原始带标签文件名
+ */
 const fs = require('fs');
 const path = require('path');
 
-// 读取图标目录
+// Input and output directories. / 输入与输出目录。
 const iconDir = path.join(__dirname, '../icon');
 const fontsDir = path.join(__dirname, '../fonts');
 
-// 存储标签信息的对象
+// In-memory metadata cache. / 内存中的标签元数据缓存。
 const iconTags = {};
-// 存储需要恢复的文件名映射
+// Temporary filename mapping for restore step. / 恢复步骤使用的临时文件名映射。
 const fileNameMapping = {};
 
-// 文件名标签分隔符
-// 旧格式: iconName@标签1#标签2.svg
-// 新格式: iconName·标签1·标签2.svg
+// Filename tag separator. / 文件名标签分隔符。
+// Legacy format: iconName@标签1#标签2.svg / 历史格式：iconName@标签1#标签2.svg
+// Current format: iconName·标签1·标签2.svg / 当前格式：iconName·标签1·标签2.svg
 const TAG_SEPARATOR = '·';
 
-// 处理图标文件
+// Scan icon files, extract tags, and generate metadata. / 扫描图标文件、提取标签并生成元数据。
 function processIcons() {
   const files = fs.readdirSync(iconDir);
   let processedCount = 0;
@@ -28,20 +37,20 @@ function processIcons() {
       const fullPath = path.join(iconDir, file);
       const nameWithoutExt = file.replace('.svg', '');
       
-      // 检查是否包含标签
+      // Split tag-style filename into icon name + tags. / 将标签式文件名拆分为图标名与标签列表。
       if (nameWithoutExt.includes(TAG_SEPARATOR)) {
         const parts = nameWithoutExt.split(TAG_SEPARATOR).filter(part => part.trim().length > 0);
         const iconName = parts[0];
         const tags = parts.slice(1).filter(tag => tag.trim().length > 0);
         
-        // 生成新的文件名（纯英文）
+        // Temporary build filename (without tags). / 构建阶段临时文件名（不带标签）。
         const newFileName = iconName + '.svg';
         const newPath = path.join(iconDir, newFileName);
         
-        // 保存文件名映射关系，用于后续恢复
+        // Persist mapping to recover original tagged filename later. / 记录映射，供后续恢复原始带标签文件名。
         fileNameMapping[newFileName] = file;
         
-        // 如果新文件名不存在，重命名文件
+        // Rename only when target doesn't exist; otherwise remove duplicate tagged file. / 仅在目标不存在时重命名，否则删除重复的带标签文件。
         if (!fs.existsSync(newPath)) {
           console.log(`🔄 处理: ${file} -> ${newFileName}`);
           fs.renameSync(fullPath, newPath);
@@ -52,21 +61,21 @@ function processIcons() {
           fs.unlinkSync(fullPath);
         }
         
-        // 保存标签信息
+        // Save tag metadata for this icon. / 保存当前图标的标签元数据。
         iconTags[iconName] = tags;
         taggedCount++;
       } else {
-        // 没有标签的图标，标记为无标签
+        // Icon without tags: keep key with null value. / 无标签图标：以 null 记录键值。
         iconTags[nameWithoutExt] = null;
       }
     }
   });
   
-  // 保存标签信息到JSON文件
+  // Write tag metadata file. / 写入标签元数据文件。
   const tagsFilePath = path.join(fontsDir, 'icon-tags.json');
   fs.writeFileSync(tagsFilePath, JSON.stringify(iconTags, null, 2), 'utf8');
   
-  // 保存文件名映射到JSON文件，用于后续恢复
+  // Write restore mapping file. / 写入恢复映射文件。
   const mappingFilePath = path.join(fontsDir, 'filename-mapping.json');
   fs.writeFileSync(mappingFilePath, JSON.stringify(fileNameMapping, null, 2), 'utf8');
   
@@ -88,7 +97,7 @@ function processIcons() {
   }
 }
 
-// 恢复原始文件名
+// Restore original tagged filenames after build. / 构建后恢复原始带标签文件名。
 function restoreOriginalFileNames() {
   const mappingFilePath = path.join(fontsDir, 'filename-mapping.json');
   
@@ -115,17 +124,17 @@ function restoreOriginalFileNames() {
   
   console.log(`✅ 已恢复 ${restoredCount} 个文件名`);
   
-  // 清理映射文件
+  // Remove temporary mapping file after restore. / 恢复完成后删除临时映射文件。
   fs.unlinkSync(mappingFilePath);
   console.log('🗑️  已清理临时映射文件');
 }
 
-// 根据命令行参数决定执行哪个操作
+// Route by command argument. / 根据命令参数路由执行模式。
 const command = process.argv[2];
 
 if (command === 'restore') {
   restoreOriginalFileNames();
 } else {
-  // 执行处理
+  // Default mode: process tags. / 默认模式：执行标签处理。
   processIcons();
 }

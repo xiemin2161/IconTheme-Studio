@@ -1,7 +1,7 @@
 import { defineComponent, h } from 'vue';
 
-export const itsIcon8K = defineComponent({
-  name: 'itsIcon8K',
+export const ItsIcon8K = defineComponent({
+  name: 'ItsIcon8K',
   props: {
     class: {
       type: String,

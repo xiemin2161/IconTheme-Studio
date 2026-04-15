@@ -36,7 +36,6 @@ var lastSearchTerm = '';
 var searchDebounceTimer = null;
 var iconOriginalSvgContent = '';
 var iconColorValues = [];
-var colorBindingTarget = 'primary';
 var colorBindings = { primary: null, secondary: null };
 var colorPendingSelections = { primary: null, secondary: null };
 var colorVariableValues = { primary: DEFAULT_ICON_PRIMARY, secondary: DEFAULT_ICON_SECONDARY };
@@ -155,44 +154,53 @@ function renderColorBindValue(el, colorValue, placeholder) {
 function updateColorBindingSummary() {
   var primaryEl = document.getElementById('bind-primary-value');
   var secondaryEl = document.getElementById('bind-secondary-value');
-  renderColorBindValue(primaryEl, colorBindings.primary, '未绑定');
-  renderColorBindValue(secondaryEl, colorBindings.secondary, '未绑定');
+  renderColorBindValue(primaryEl, colorPendingSelections.primary || colorBindings.primary, '未绑定');
+  renderColorBindValue(secondaryEl, colorPendingSelections.secondary || colorBindings.secondary, '未绑定');
 }
 
-function renderColorPool() {
-  var pool = document.getElementById('icon-color-pool');
+function renderColorPoolForTarget(target) {
+  var pool = document.getElementById(target === 'secondary' ? 'icon-color-pool-secondary' : 'icon-color-pool-primary');
   if (!pool) return;
   pool.innerHTML = '';
   if (!iconColorValues.length) {
     pool.innerHTML = '<span style="font-size:12px;color:#999;">未扫描到可绑定颜色</span>';
     return;
   }
+  var otherTarget = target === 'secondary' ? 'primary' : 'secondary';
+  var selected = normalizeColorValue(colorPendingSelections[target]);
+  var selectedOther = normalizeColorValue(colorPendingSelections[otherTarget]);
   iconColorValues.forEach(function(color) {
     var chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'color-chip';
-    var otherTarget = colorBindingTarget === 'primary' ? 'secondary' : 'primary';
-    var occupiedByOther = colorBindings[otherTarget] && normalizeColorValue(colorBindings[otherTarget]) === color;
-    var isActive = colorPendingSelections[colorBindingTarget] && normalizeColorValue(colorPendingSelections[colorBindingTarget]) === color;
+    var isActive = selected && selected === color;
+    var isDisabled = selectedOther && selectedOther === color;
     if (isActive) chip.classList.add('active');
-    if (occupiedByOther) chip.classList.add('disabled');
-    chip.disabled = !!occupiedByOther;
+    if (isDisabled) chip.classList.add('disabled');
+    chip.disabled = !!isDisabled;
     chip.innerHTML = '<span class="color-dot" style="background:' + color + '"></span><span>' + color + '</span>';
     chip.onclick = function() {
-      if (occupiedByOther) return;
-      colorPendingSelections[colorBindingTarget] = color;
+      if (isDisabled) return;
+      colorPendingSelections[target] = isActive ? null : color;
       updateCommitButtonState();
-      renderColorPool();
+      updateColorBindingSummary();
+      renderColorPools();
     };
     pool.appendChild(chip);
   });
 }
 
+function renderColorPools() {
+  renderColorPoolForTarget('primary');
+  renderColorPoolForTarget('secondary');
+}
+
 function updateCommitButtonState() {
   var commitBtn = document.getElementById('apply-color-binding-btn');
   if (!commitBtn) return;
-  var selected = colorPendingSelections[colorBindingTarget];
-  commitBtn.disabled = !selected;
+  var hasPrimary = !!normalizeColorValue(colorPendingSelections.primary);
+  var hasSecondary = !!normalizeColorValue(colorPendingSelections.secondary);
+  commitBtn.disabled = !(hasPrimary && hasSecondary);
 }
 
 function applyColorBindingsToPreview() {
@@ -286,44 +294,38 @@ function initColorBindModal() {
   var modal = document.getElementById('color-bind-modal');
   var openBtn = document.getElementById('color-bind-btn');
   var closeBtn = document.getElementById('color-bind-close');
-  var targetButtons = document.querySelectorAll('.bind-target-btn');
   var applyBtn = document.getElementById('apply-color-binding-btn');
   var resetBtn = document.getElementById('reset-color-binding-btn');
   if (!modal || !openBtn || !closeBtn) return;
 
-  function setTarget(next) {
-    colorBindingTarget = next === 'secondary' ? 'secondary' : 'primary';
-    targetButtons.forEach(function(btn) {
-      btn.classList.toggle('active', btn.getAttribute('data-bind-target') === colorBindingTarget);
-    });
-    renderColorPool();
-    updateCommitButtonState();
-  }
-
   openBtn.onclick = function() {
-    renderColorPool();
+    colorPendingSelections = {
+      primary: colorBindings.primary,
+      secondary: colorBindings.secondary
+    };
+    renderColorPools();
     updateColorBindingSummary();
+    updateCommitButtonState();
     modal.classList.add('show');
   };
   closeBtn.onclick = function() { modal.classList.remove('show'); };
   modal.onclick = function(e) { if (e.target === modal) modal.classList.remove('show'); };
 
-  targetButtons.forEach(function(btn) {
-    btn.onclick = function() {
-      setTarget(btn.getAttribute('data-bind-target'));
-    };
-  });
-  setTarget('primary');
-
   if (applyBtn) {
     applyBtn.onclick = function() {
-      var selected = colorPendingSelections[colorBindingTarget];
-      if (!selected) return;
-      colorBindings[colorBindingTarget] = selected;
+      var primary = normalizeColorValue(colorPendingSelections.primary);
+      var secondary = normalizeColorValue(colorPendingSelections.secondary);
+      if (!primary || !secondary) return;
+      if (primary === secondary) {
+        if (typeof showToast === 'function') showToast('主色和辅色不能相同', 'info');
+        return;
+      }
+      colorBindings.primary = primary;
+      colorBindings.secondary = secondary;
       persistColorBindings();
       applyColorBindingsToPreview();
       updateColorBindingSummary();
-      renderColorPool();
+      renderColorPools();
       updateCommitButtonState();
       if (typeof showToast === 'function') showToast('绑定成功', 'success');
     };
@@ -334,7 +336,7 @@ function initColorBindModal() {
       colorPendingSelections = { primary: null, secondary: null };
       persistColorBindings();
       updateColorBindingSummary();
-      renderColorPool();
+      renderColorPools();
       updateCommitButtonState();
       insertSvgContent(iconOriginalSvgContent);
       updateIconCssVariables();
@@ -757,7 +759,7 @@ function loadAndRenderIcons() {
     allIconNames = Object.keys(iconData || {}).sort();
     renderAllTabs(allIconNames);
     updateIconCountInHeader(allIconNames);
-    renderColorPool();
+    renderColorPools();
     updateColorBindingSummary();
     
     if (typeof updateHelpContent === 'function') {

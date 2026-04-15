@@ -1,18 +1,26 @@
+/**
+ * Generate and synchronize preview-site JS assets in `fonts/` / 生成并同步 `fonts/` 预览站 JS 资源。
+ *
+ * Responsibilities / 职责:
+ * - Ensure `help-content.js` exists and uses a single source of truth. / 确保 `help-content.js` 存在且来源唯一。
+ * - Keep `fonts/app.js` as user-customizable source (do not overwrite if present). / 将 `fonts/app.js` 视为可自定义源码（存在时不覆盖）。
+ * - Provide initialization fallback templates for first-time setup. / 为首次初始化提供兜底模板。
+ */
 const fs = require('fs');
 const path = require('path');
 
-// 创建额外的JS文件
+// Entry point: create/sync additional JS files. / 入口：创建与同步附加 JS 文件。
 function createAdditionalJSFiles() {
   const fontsDir = path.join(__dirname, '../fonts');
   
-  // 创建完整的help-content.js
+  // Always refresh help-content.js from configured source. / 始终从配置源刷新 help-content.js。
   const helpContentJS = createHelpContentJS();
   fs.writeFileSync(path.join(fontsDir, 'help-content.js'), helpContentJS);
 
-  // app.js 以 fonts/app.js 为唯一源文件，构建时不覆盖，直接保留
+  // app.js is treated as customizable source and is not overwritten during rebuild. / app.js 作为可定制源码，重建时不覆盖。
   const appJSSrc = path.join(fontsDir, 'app.js');
   if (!fs.existsSync(appJSSrc)) {
-    // 仅在文件不存在时才用内置模板生成（首次初始化）
+    // Create app.js only on first initialization. / 仅在首次初始化时生成 app.js。
     fs.writeFileSync(appJSSrc, createAppJS());
     console.log('✅ 初始化生成 app.js（首次）');
   } else {
@@ -40,12 +48,12 @@ function createHelpContentJS() {
 }
 
 function createEmbeddedHelpContentJS(jsonData) {
-  // 解析JSON并重新stringify以确保正确转义
+  // Parse and stringify to guarantee safe escaping in generated JS. / 先解析再序列化，确保生成 JS 的转义安全。
   const parsedData = JSON.parse(jsonData);
-  // 使用JSON.stringify，然后替换反引号和${}以避免模板字符串问题
+  // Escape template-sensitive characters to avoid runtime parse issues. / 转义模板敏感字符，避免运行时解析问题。
   let safeJsonString = JSON.stringify(parsedData, null, 2);
   
-  // 转义反引号和模板字符串语法，避免在JavaScript中被解释
+  // Escape backticks and `${...}` to keep generated string literal stable. / 转义反引号与 `${...}`，保持生成字符串字面量稳定。
   safeJsonString = safeJsonString
     .replace(/`/g, '\\`')           // 转义反引号
     .replace(/\$\{/g, '\\${');      // 转义 ${

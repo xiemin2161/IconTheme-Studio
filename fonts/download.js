@@ -120,6 +120,9 @@
           html = html.replace(/<h1>\s*(?:IconTheme Studio|IconTheme Studio)<sup>[^<]*<\/sup>\s*<\/h1>/i, '<h1>IconTheme Studio<sup>' + version + '</sup></h1>');
         }
 
+        // 下载包中 index.html 位于根目录，资源路径需要从 ../assets/* 改为 assets/*
+        html = html.replace(/\.\.\/assets\//g, 'assets/');
+
         // 离线包不需要再次下载打包，移除下载按钮与相关脚本
         html = html.replace(/\s*<script\s+src="vendor\/jszip\.min\.js"><\/script>\s*/gi, '\n');
         html = html.replace(/\s*<script\s+src="download\.js"><\/script>\s*/gi, '\n');
@@ -307,12 +310,16 @@
           var cssPromise = fetch('its-icon.css').then(function(r) { return r.text(); });
           var svgPromise = fetch('its-icon.symbol.svg').then(function(r) { return r.text(); });
           var tagsPromise = fetch('icon-tags.json').then(function(r) { return r.json(); }).catch(function() { return {}; });
+          var logoPromise = fetch('../assets/logo.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
+          var faviconPromise = fetch('../assets/favicon.svg').then(function(r) { return r.ok ? r.text() : null; }).catch(function() { return null; });
 
-          Promise.all([Promise.all(promises), cssPromise, svgPromise, tagsPromise]).then(function(results) {
+          Promise.all([Promise.all(promises), cssPromise, svgPromise, tagsPromise, logoPromise, faviconPromise]).then(function(results) {
             var fileContents = results[0];
             var cssContent = results[1];
             var svgContent = results[2];
             var tagsData = results[3] || {};
+            var logoContent = results[4];
+            var faviconContent = results[5];
             var transformedSvgContent = applyColorBindingsToSvg(svgContent, bindings);
             var transformedCssContent = ensureIconCssVars(cssContent, bindings);
 
@@ -326,6 +333,9 @@
                 zip.file(fileData.name, fileData.content);
               }
             });
+
+            if (logoContent) zip.file('assets/logo.svg', logoContent);
+            if (faviconContent) zip.file('assets/favicon.svg', faviconContent);
 
             // 生成干净的离线 index.html（避免任何 dev server 注入的 socket/livereload）
             var iconDataStr = JSON.stringify(iconData);
