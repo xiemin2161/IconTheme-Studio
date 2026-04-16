@@ -16,7 +16,7 @@
     "create-js-files": "node scripts/create-js-files.js",
     "vendor:jszip": "node -e \"const fs=require('fs');const path=require('path');const src=require.resolve('jszip/dist/jszip.min.js');const dest=path.join(process.cwd(),'fonts','vendor','jszip.min.js');fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(src,dest);console.log('Copied:',src,'->',dest);\"",
     "patch:jszip": "node scripts/patch-jszip.js",
-    "font": "npx svgtofont --sources icon --output fonts --fontName its-icon --website ./fonts && node -e \"const fs=require('fs');['fonts/its-icon.css.map','fonts/common.css.map'].forEach(f=>{try{fs.unlinkSync(f);console.log('Deleted:',f)}catch(e){}})\"",
+    "font": "node scripts/patch-yargs-esm.js && npx svgtofont --sources icon --output fonts --fontName its-icon --website ./fonts && node -e \"const fs=require('fs');['fonts/its-icon.css.map','fonts/common.css.map'].forEach(f=>{try{fs.unlinkSync(f);console.log('Deleted:',f)}catch(e){}})\"",
     "scss": "sass fonts/common.scss fonts/common.css --style compressed --no-source-map",
     "copy": "cpy fonts/react/*.js fonts/react/*.d.ts react --flat",
     "build:react": "tsbb build react/*.{js,d.ts} --useBabel",
@@ -65,5 +65,8 @@
     "svgtofont": "^6.5.1",
     "tsbb": "^3.7.9"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
 }
