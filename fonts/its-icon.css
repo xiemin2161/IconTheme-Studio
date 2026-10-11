@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "its-icon";
+  src: url('its-icon.eot?t=1790856891180'); /* IE9*/
+  src: url('its-icon.eot?t=1790856891180#iefix') format('embedded-opentype') /* IE6-IE8 */,
+  url('its-icon.woff2?t=1790856891180') format('woff2'),
+  url('its-icon.woff?t=1790856891180') format('woff'),
+  url('its-icon.ttf?t=1790856891180') format('truetype'),
+  url('its-icon.svg?t=1790856891180') format('svg');
+}
+
+[class^="its-icon-"], [class*=" its-icon-"] {
+  font-family: 'its-icon' !important;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.its-icon-8K_Original::before { content: "\ea01"; }
+.its-icon-8K_Wallpaper::before { content: "\ea02"; }
+.its-icon-accountBinding::before { content: "\ea03"; }
+.its-icon-accountCancellation::before { content: "\ea04"; }
+.its-icon-accountManagement::before { content: "\ea05"; }
+.its-icon-All_Wallpaper::before { content: "\ea06"; }
+.its-icon-attachmentManage::before { content: "\ea07"; }
+.its-icon-avatarSetting::before { content: "\ea08"; }
+.its-icon-cart::before { content: "\ea09"; }
+.its-icon-check::before { content: "\ea0a"; }
+.its-icon-close::before { content: "\ea0b"; }
+.its-icon-contentManagement::before { content: "\ea0c"; }
+.its-icon-darkMode::before { content: "\ea0d"; }
+.its-icon-date::before { content: "\ea0e"; }
+.its-icon-doNotSelect::before { content: "\ea0f"; }
+.its-icon-download::before { content: "\ea10"; }
+.its-icon-downloadRecord::before { content: "\ea11"; }
+.its-icon-editAccount::before { content: "\ea12"; }
+.its-icon-eidt::before { content: "\ea13"; }
+.its-icon-emailVerification::before { content: "\ea14"; }
+.its-icon-eye::before { content: "\ea15"; }
+.its-icon-favorite::before { content: "\ea16"; }
+.its-icon-favoriteFill::before { content: "\ea17"; }
+.its-icon-financialManagement::before { content: "\ea18"; }
+.its-icon-goBack::before { content: "\ea19"; }
+.its-icon-home::before { content: "\ea1a"; }
+.its-icon-homeFill::before { content: "\ea1b"; }
+.its-icon-inSiteMessage::before { content: "\ea1c"; }
+.its-icon-language::before { content: "\ea1d"; }
+.its-icon-Laptop_Wallpaper::before { content: "\ea1e"; }
+.its-icon-lightMode::before { content: "\ea1f"; }
+.its-icon-loginRecord::before { content: "\ea20"; }
+.its-icon-logout::before { content: "\ea21"; }
+.its-icon-love::before { content: "\ea22"; }
+.its-icon-loveFill::before { content: "\ea23"; }
+.its-icon-menu::before { content: "\ea24"; }
+.its-icon-message::before { content: "\ea25"; }
+.its-icon-mobileVerification::before { content: "\ea26"; }
+.its-icon-myCollection::before { content: "\ea27"; }
+.its-icon-next::before { content: "\ea28"; }
+.its-icon-notSelected::before { content: "\ea29"; }
+.its-icon-onlineRecharge::before { content: "\ea2a"; }
+.its-icon-password::before { content: "\ea2b"; }
+.its-icon-pause::before { content: "\ea2c"; }
+.its-icon-paymentDownloadRecord::before { content: "\ea2d"; }
+.its-icon-paymentRecord::before { content: "\ea2e"; }
+.its-icon-PC_Wallpaper::before { content: "\ea2f"; }
+.its-icon-Phone_Wallpaper::before { content: "\ea30"; }
+.its-icon-play::before { content: "\ea31"; }
+.its-icon-prev::before { content: "\ea32"; }
+.its-icon-price::before { content: "\ea33"; }
+.its-icon-privacyStatement::before { content: "\ea34"; }
+.its-icon-pulldown::before { content: "\ea35"; }
+.its-icon-question::before { content: "\ea36"; }
+.its-icon-realNameAuthentication::before { content: "\ea37"; }
+.its-icon-search::before { content: "\ea38"; }
+.its-icon-searchFill::before { content: "\ea39"; }
+.its-icon-selected::before { content: "\ea3a"; }
+.its-icon-serviceSupport::before { content: "\ea3b"; }
+.its-icon-Tablet_Wallpaper::before { content: "\ea3c"; }
+.its-icon-theme::before { content: "\ea3d"; }
+.its-icon-tip::before { content: "\ea3e"; }
+.its-icon-transactionRecord::before { content: "\ea3f"; }
+.its-icon-Ultrawide_Wallpaper::before { content: "\ea40"; }
+.its-icon-user::before { content: "\ea41"; }
+.its-icon-userCenter::before { content: "\ea42"; }
+.its-icon-userFill::before { content: "\ea43"; }
+.its-icon-userProfileEdit::before { content: "\ea44"; }
+.its-icon-vip::before { content: "\ea45"; }
+.its-icon-wallpaper::before { content: "\ea46"; }
+.its-icon-wallpaperFill::before { content: "\ea47"; }
+.its-icon-wallpaperManagement::before { content: "\ea48"; }
+.its-icon-Watch_Wallpaper::before { content: "\ea49"; }
+.its-icon-wechatBinding::before { content: "\ea4a"; }
+.its-icon-withdrawManagement::before { content: "\ea4b"; }
+
+

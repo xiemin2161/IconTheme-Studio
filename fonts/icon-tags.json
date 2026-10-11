@@ -1,0 +1,278 @@
+{
+  "8K_Original": [
+    "8K",
+    "Original"
+  ],
+  "8K_Wallpaper": [
+    "8K",
+    "Wallpaper"
+  ],
+  "accountBinding": [
+    "账号绑定"
+  ],
+  "accountCancellation": [
+    "账号注销"
+  ],
+  "accountManagement": [
+    "账号管理"
+  ],
+  "All_Wallpaper": [
+    "Wallpaper",
+    "All"
+  ],
+  "attachmentManage": [
+    "附件管理"
+  ],
+  "avatarSetting": [
+    "头像设置"
+  ],
+  "cart": [
+    "购物车"
+  ],
+  "check": [
+    "选择"
+  ],
+  "close": [
+    "关闭",
+    "错误"
+  ],
+  "contentManagement": [
+    "内容管理"
+  ],
+  "darkMode": [
+    "月亮",
+    "夜间模式",
+    "深色模式"
+  ],
+  "date": [
+    "更新时间",
+    "更新日期"
+  ],
+  "doNotSelect": [
+    "不勾选",
+    "错误"
+  ],
+  "downloadRecord": [
+    "下载记录"
+  ],
+  "download": [
+    "下载",
+    "下载次数"
+  ],
+  "editAccount": [
+    "修改账号"
+  ],
+  "eidt": [
+    "编辑",
+    "修改",
+    "笔"
+  ],
+  "emailVerification": [
+    "邮箱认证"
+  ],
+  "eye": [
+    "浏览",
+    "眼睛",
+    "查看"
+  ],
+  "favoriteFill": [
+    "收藏",
+    "填充",
+    "五角星"
+  ],
+  "favorite": [
+    "收藏",
+    "五角星"
+  ],
+  "financialManagement": [
+    "财务管理"
+  ],
+  "goBack": [
+    "返回",
+    "后退"
+  ],
+  "homeFill": [
+    "首页",
+    "填充"
+  ],
+  "home": [
+    "首页"
+  ],
+  "inSiteMessage": [
+    "站内消息"
+  ],
+  "language": [
+    "语言"
+  ],
+  "Laptop_Wallpaper": [
+    "Laptop",
+    "Notebook",
+    "Wallpaper",
+    "笔记本"
+  ],
+  "lightMode": [
+    "太阳",
+    "日间模式",
+    "亮色模式"
+  ],
+  "loginRecord": [
+    "登录记录"
+  ],
+  "logout": [
+    "退出登录"
+  ],
+  "loveFill": [
+    "喜欢",
+    "填充"
+  ],
+  "love": [
+    "喜欢"
+  ],
+  "menu": [
+    "主菜单"
+  ],
+  "message": [
+    "消息"
+  ],
+  "mobileVerification": [
+    "手机认证"
+  ],
+  "myCollection": [
+    "我的收藏"
+  ],
+  "next": [
+    "向右",
+    "右"
+  ],
+  "notSelected": [
+    "未勾选"
+  ],
+  "onlineRecharge": [
+    "在线充值"
+  ],
+  "password": [
+    "密码",
+    "锁"
+  ],
+  "pause": [
+    "暂停"
+  ],
+  "paymentDownloadRecord": [
+    "支付下载记录"
+  ],
+  "paymentRecord": [
+    "支付记录"
+  ],
+  "PC_Wallpaper": [
+    "5K",
+    "PC",
+    "Wallpaper",
+    "电脑"
+  ],
+  "Phone_Wallpaper": [
+    "Phone",
+    "Wallpaper",
+    "手机"
+  ],
+  "play": [
+    "播放"
+  ],
+  "prev": [
+    "向左",
+    "左"
+  ],
+  "price": [
+    "价格",
+    "充值"
+  ],
+  "privacyStatement": [
+    "隐私",
+    "隐私说明"
+  ],
+  "pulldown": [
+    "下拉"
+  ],
+  "question": [
+    "问题"
+  ],
+  "realNameAuthentication": [
+    "实名认证"
+  ],
+  "searchFill": [
+    "搜索",
+    "查询",
+    "填充"
+  ],
+  "search": [
+    "搜索",
+    "查询"
+  ],
+  "selected": [
+    "勾选",
+    "正确"
+  ],
+  "serviceSupport": [
+    "服务支持"
+  ],
+  "Tablet_Wallpaper": [
+    "Wallpaper",
+    "Tablet",
+    "平板"
+  ],
+  "theme": [
+    "主题"
+  ],
+  "tip": [
+    "提示"
+  ],
+  "transactionRecord": [
+    "交易记录"
+  ],
+  "Ultrawide_Wallpaper": [
+    "5K",
+    "PC",
+    "Wallpaper",
+    "Ultrawide",
+    "带鱼屏"
+  ],
+  "userCenter": [
+    "用户中心"
+  ],
+  "userFill": [
+    "用户",
+    "我的",
+    "填充"
+  ],
+  "userProfileEdit": [
+    "资料修改"
+  ],
+  "user": [
+    "用户",
+    "我的"
+  ],
+  "vip": [
+    "会员",
+    "等级"
+  ],
+  "wallpaperFill": [
+    "壁纸",
+    "填充"
+  ],
+  "wallpaperManagement": [
+    "壁纸管理"
+  ],
+  "wallpaper": [
+    "壁纸"
+  ],
+  "Watch_Wallpaper": [
+    "Wallpaper",
+    "Watch",
+    "手表"
+  ],
+  "wechatBinding": [
+    "微信绑定"
+  ],
+  "withdrawManagement": [
+    "提现管理"
+  ]
+}

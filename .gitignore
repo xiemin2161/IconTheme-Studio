@@ -1,0 +1,123 @@
+# ===== 项目上云工具 · 统一规则 开始 =====
+# ── 依赖（可由 npm/pip 重新安装）──
+node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pydeps/
+site-packages/
+.pnpm-store/
+.yarn/
+bower_components/
+
+# ── 构建产物 ──
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+target/
+obj/
+coverage/
+.turbo/
+.svelte-kit/
+*.tsbuildinfo
+
+# ── 缓存与临时 ──
+.cache/
+cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.parcel-cache/
+tmp/
+temp/
+.tmp/
+*.log
+
+# ── AI 工具的过程目录（曾经把仓库撑到 10 GB）──
+.codex/
+work/
+
+# ── 凭据：绝不提交 ──
+.env
+.env.*
+!.env.example
+!*.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+*_private*
+# 公开根证书例外（很多项目本来就该提交）
+!**/cacert.pem
+
+# ── 大素材：放数据区，不进 Git ──
+# 数据区位置见项目根目录的「数据目录说明.md」；各机器用环境变量 WORK_DATA 表示
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.flv
+*.wmv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.gguf
+*.safetensors
+*.onnx
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.h5
+*.tflite
+*.vhdx
+*.vhd
+*.iso
+*.img
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.tgz
+*.whl
+*.jar
+*.nupkg
+*.apk
+*.ipa
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.msi
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+*.lib
+*.psd
+*.ai
+*.sketch
+*.blend
+
+# ── 系统垃圾 ──
+.DS_Store
+Thumbs.db
+desktop.ini
+.Spotlight-V100/
+.fseventsd/
+$RECYCLE.BIN/
+
+# 无额外规则（依赖与产物已由通用规则覆盖）
+# ===== 项目上云工具 · 统一规则 结束 =====
